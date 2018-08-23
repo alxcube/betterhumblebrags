@@ -24,6 +24,19 @@
                 <div class="card-body">
                         <form method="POST" action="/" novalidate>
                             {{ csrf_field() }}
+                            
+                            <div class="form-group row">
+                                <div class="col-md-8">
+                                    Curve text:
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <textarea class="form-control" id="upper_text" name="curve_text">{{ old('curve_text') }}</textarea>
+                                    {{-- <input type="text" class="form-control" id="comment" name="comment" value="{{ old('comment') }}" /> --}}
+                                </div>
+                            </div>
 
                             <div class="form-group row">
                                 <div class="col-md-8">

@@ -31,8 +31,13 @@ class HomeController extends Controller
     {
         $brag = Brag::where('id', request('id'))->first();
         $customText = request()->comment;
+        $curveText  = request()->curve_text;
 
         // Delete extra lines
+        $lines      = preg_split('/\r?\n/', trim($curveText));
+        array_splice($lines, 3);
+        $curveText  = implode("\n", $lines);
+        
         $lines      = preg_split('/\r?\n/', trim($customText));
         array_splice($lines, 4);
         $customText = implode("\n", $lines);
@@ -49,7 +54,7 @@ class HomeController extends Controller
         $bottomSpacing          = 170;
 
         // Prepare top text
-        $font       = (new Font($brag->description))
+        $font       = (new Font($curveText))
                 ->file($fontFile)
                 ->size(48)
                 ->color('#fdf6e3')
@@ -147,7 +152,8 @@ class HomeController extends Controller
         session([
                 'brag_filename' => $filename,
                 'brag_id'       => $brag->id,
-                'custom_text'   => $customText
+                'custom_text'   => $customText,
+                'curve_text'    => $curveText
                 ]);
 
         $backgroundImage->save('images/brags/' . $filename);
@@ -177,7 +183,12 @@ class HomeController extends Controller
             return redirect()->to('/');
         }
 
-        return view('show', ['brag' => $brag, 'brag_filename' => $session->get('brag_filename'), 'customText' => $session->get('custom_text', '')]);
+        return view('show', [
+                'brag' => $brag,
+                'brag_filename' => $session->get('brag_filename'),
+                'customText' => $session->get('custom_text', ''),
+                'curveText' => $session->get('curve_text', '')
+        ]);
     }
 
 
